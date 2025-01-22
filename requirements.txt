@@ -1,0 +1,6 @@
+setuptools>=75.2.0
+wheel>=0.44.0
+loguru>=0.7.3
+aiogram~=3.15.0
+python-dotenv>=1.0.1
+Django>=5.1.3

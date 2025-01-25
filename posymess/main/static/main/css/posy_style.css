@@ -1,18 +1,86 @@
-// <uniquifier>: Use a unique and descriptive class name
-// <weight>: Use a value from 100 to 900
+/* <uniquifier>: Use a unique and descriptive class name */
+/* <weight>: Use a value from 100 to 900 */
 
-.montserrat-<uniquifier> {
-  font-family: "Montserrat", serif;
-  font-optical-sizing: auto;
-  font-weight: <weight>;
-  font-style: normal;
-}
-
-.roboto-<uniquifier> {
+/*.roboto-<uniquifier> {
   font-family: "Roboto", serif;
   font-optical-sizing: auto;
   font-weight: <weight>;
   font-style: normal;
   font-variation-settings:
     "wdth" 100;
+}*/
+
+/*.didact-gothic{
+  font-family: "Didact Gothic", serif;
+  font-size: 24px;
+  font-weight: 400;
+  font-style: normal;
+}*/
+
+/*.didact-gothic{
+  font-family: "Didact Gothic", serif;
+  font-size: 18px;
+  font-weight: 400;
+  font-style: normal;
+}*/
+
+/*---Header---*/
+.navbar{
+  background-image: url("../img/nav_back.png");
+  height: 110px;
+}
+
+/*.navbar-nav{
+  background-color: rgba(120,205,100,0.5);
+  margin-left: -17px;
+  padding: 10px 20px 0 0;
+  border-radius: 0 10px 10px 0;
+  height: 600px;
+}*/
+
+.navbar-brand {
+  background-color: rgba(140, 220, 140, 1);
+  position: fixed;
+  top: 8px;
+  left: 10px;
+  padding: 5px 20px;
+  border-radius: 10px;
+  height: 90px; /* высота верхней части фона */
+  box-sizing: border-box; /* учитываем padding и border в общей высоте */
+}
+
+.nav-item{
+  font-size: 22px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+/*---Footer---*/
+/*footer {
+  background-image: url("../img/footer_back.png");
+  position: fixed;
+  display: flex;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  justify-content: center;
+  z-index: 1200;
+}*/
+
+.footer_textbox{
+  font-family: "Roboto", serif;
+  font-size: 18px;
+  font-weight: 300;
+  text-align: center;
+  color: #FFFFFF;
+  width: 450px;
+  background-color: rgba(120,205,100,0.5);
+  border-radius: 10px;
+}
+
+.posy-font {
+  font-family: "Questrial", serif;
+  font-size: 18px;
+  font-weight: 500;
+  font-style: normal;
 }

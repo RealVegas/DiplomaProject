@@ -1,18 +1,15 @@
-/* <uniquifier>: Use a unique and descriptive class name */
-/* <weight>: Use a value from 100 to 900 */
-
-/*.roboto-<uniquifier> {
+/*---Fonts---*/
+/*.roboto{
   font-family: "Roboto", serif;
   font-optical-sizing: auto;
-  font-weight: <weight>;
+  font-weight: 400;
   font-style: normal;
   font-variation-settings:
     "wdth" 100;
 }*/
 
-/*.didact-gothic{
-  font-family: "Didact Gothic", serif;
-  font-size: 24px;
+/*.questrial-regular {
+  font-family: "Questrial", serif;
   font-weight: 400;
   font-style: normal;
 }*/
@@ -25,35 +22,113 @@
 }*/
 
 /*---Header---*/
-.navbar{
+header{
   background-image: url("../img/nav_back.png");
+  width: 100%;
   height: 110px;
+
 }
 
-/*.navbar-nav{
-  background-color: rgba(120,205,100,0.5);
-  margin-left: -17px;
-  padding: 10px 20px 0 0;
-  border-radius: 0 10px 10px 0;
-  height: 600px;
-}*/
+.brand-logo{
+  height: 80px;
+}
 
-.navbar-brand {
+.brand-bar {
   background-color: rgba(140, 220, 140, 1);
-  position: fixed;
-  top: 8px;
+  position: relative;
   left: 10px;
+  top: 8px;
+  width: 180px;
+  height: 90px;
   padding: 5px 20px;
   border-radius: 10px;
-  height: 90px; /* высота верхней части фона */
-  box-sizing: border-box; /* учитываем padding и border в общей высоте */
 }
 
-.nav-item{
-  font-size: 22px;
-  font-weight: 600;
-  color: #FFFFFF;
+.brand-bond{
+  left: 1200px;
+  top: 22px;
+  width: 800px;
+  position: absolute;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* две колонки */
 }
+
+.bond{
+  font-family: "Didact Gothic", serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: #FFFFFF;
+  margin-bottom: 5px;
+}
+
+a{
+  color: #B4FFFF;
+  text-decoration: none;
+}
+
+/*---Панель кнопок---*/
+.navbar-nav {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  height: 40px;
+  margin: 0 35%;
+}
+
+.nav-item {
+  font-family: "Didact Gothic", serif;
+  font-size: 18px;
+  font-weight: 400;
+  flex: 1;
+  text-align: center;
+  color: #E1E1E1;
+  border-left: 1px solid #FFFFFF;
+  border-right: 1px solid #FFFFFF;
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+  overflow: hidden;
+}
+
+.nav-item::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.nav-item:hover {
+  color: #B4FFFF;
+  transform: scaleX(1);
+}
+
+.nav-item:hover::after {
+  transform: scaleX(1);
+}
+
+.nav-item:active {
+  color: fuchsia;
+}
+
+.nav-item.active {
+  font-weight: 700; /* Более жирный шрифт */
+  color: #FFFFFF; /* Или любой другой цвет, чтобы выделить активную ссылку */
+  pointer-events: none; /* Отключение реакций на наведение и нажатие */
+}
+
+
+
+
+
+
+
+
+
 
 /*---Footer---*/
 /*footer {

@@ -1,2 +1,0 @@
-# DiplomaProject
-Дипломная работа Zerocoder

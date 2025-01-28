@@ -14,6 +14,10 @@ class User(models.Model):
     def __str__(self):
         return self.username
 
+    class Meta:
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
+
 
 class Flower(models.Model):
     posy_name: str = models.CharField('Название букета', max_length=50, unique=True, null=False)
@@ -22,6 +26,10 @@ class Flower(models.Model):
     def __str__(self):
         return self.posy_name
 
+    class Meta:
+        verbose_name = 'Букет'
+        verbose_name_plural = 'Букеты'
+
 
 class Order(models.Model):
     user: str = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -29,4 +37,8 @@ class Order(models.Model):
     order_date: str = models.DateTimeField('Дата заказа', auto_now_add=True)
 
     def __str__(self):
-        return f'Order #{self.id} by {self.user.username} for {self.flower.posy_name}'
+        return f'Заказ №{self.id} от {self.user.username} букет {self.flower.posy_name}'
+
+    class Meta:
+        verbose_name = 'Заказ'
+        verbose_name_plural = 'Заказы'

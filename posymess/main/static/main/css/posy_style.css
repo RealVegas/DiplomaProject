@@ -26,14 +26,13 @@ header{
   background-image: url("../img/nav_back.png");
   width: 100%;
   height: 110px;
-
 }
 
 .brand-logo{
   height: 80px;
 }
 
-.brand-bar {
+.brand-bar{
   background-color: rgba(140, 220, 140, 1);
   position: relative;
   left: 10px;
@@ -67,7 +66,7 @@ a{
 }
 
 /*---Панель кнопок---*/
-.navbar-nav {
+.navbar-nav{
   display: flex;
   align-content: center;
   align-items: center;
@@ -75,7 +74,7 @@ a{
   margin: 0 35%;
 }
 
-.nav-item {
+.nav-item{
   font-family: "Didact Gothic", serif;
   font-size: 18px;
   font-weight: 400;
@@ -90,7 +89,7 @@ a{
   overflow: hidden;
 }
 
-.nav-item::after {
+.nav-item::after{
   content: '';
   position: absolute;
   left: 0;
@@ -102,28 +101,70 @@ a{
   transition: transform 0.3s ease;
 }
 
-.nav-item:hover {
+.nav-item:hover{
   color: #B4FFFF;
   transform: scaleX(1);
 }
 
-.nav-item:hover::after {
+.nav-item:hover::after{
   transform: scaleX(1);
 }
 
-.nav-item:active {
+.nav-item:active{
   color: fuchsia;
 }
 
-.nav-item.active {
+.nav-item.active{
   font-weight: 700; /* Более жирный шрифт */
   color: #FFFFFF; /* Или любой другой цвет, чтобы выделить активную ссылку */
   pointer-events: none; /* Отключение реакций на наведение и нажатие */
 }
 
+/*---Форма регистрации---*/
+.card-custom{
+  border-radius: 15px; /* Закругленные края карточки */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Тень для карточки */
+  padding: 20px; /* Отступы внутри карточки */
+}
 
+.form-control{
+  border-radius: 10px; /* Закругленные края полей ввода */
+}
 
+/*------------*/
+.col-form-label{
+    font-family: "Roboto", sans-serif;
+    font-size: 18px;
+    font-weight: 300;
+    font-style: normal;
+    color: #505050;
+}
 
+.form-check-label{
+    font-family: "Roboto", sans-serif;
+    font-size: 18px;
+    font-weight: 300;
+    font-style: normal;
+    color: #505050;
+}
+
+.page-title{
+    font-family: "Roboto", sans-serif;
+    font-size: 25px;
+    font-weight: 800;
+    font-style: normal;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: #505050;
+}
+
+.news-text{
+    font-family: "Roboto", sans-serif;
+    font-size: 22px;
+    font-weight: 500;
+    font-style: normal;
+    color: #505050;
+}
 
 
 

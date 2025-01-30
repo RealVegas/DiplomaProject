@@ -1,10 +1,5 @@
 from django.db import models
 
-# id: int = db.Column(db.Integer, primary_key=True)
-# username: str = db.Column(db.String(20), unique=True, nullable=False)
-# email: str = db.Column(db.String(120), unique=True, nullable=False)
-# password: str = db.Column(db.String(60), nullable=False)
-
 
 class User(models.Model):
     user_name: str = models.CharField('Имя пользователя', max_length=50, unique=True, null=False)

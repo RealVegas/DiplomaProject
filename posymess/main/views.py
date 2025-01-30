@@ -21,6 +21,6 @@ def register(request):
     return render(request, 'main/register.html', {'form': form, 'error': error})
 
 
-def flower_list(request):
-    flowers = Flower.objects.all()
-    return render(request, 'flower_list.html', {'flowers': flowers})
+# def flower_list(request):
+#     flowers = Flower.objects.all()
+#     return render(request, 'flower_list.html', {'flowers': flowers})

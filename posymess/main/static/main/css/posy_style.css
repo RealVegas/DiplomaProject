@@ -159,14 +159,15 @@ p{
     font-size: 20px;
 }
 
-.btn.btn-primary {
+.btn.btn-primary{
     font-size: 18px;
     width: 400px;
 }
 
-
-
-
+.btn.btn-primary.disabled{
+    background-color: #323232;
+    width: 400px;
+}
 
 
 

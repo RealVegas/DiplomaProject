@@ -7,12 +7,16 @@ from django.db import models
 
 
 class User(models.Model):
-    username: str = models.CharField('Имя пользователя', max_length=50, unique=True, null=False)
+    user_name: str = models.CharField('Имя пользователя', max_length=50, unique=True, null=False)
     email: str = models.EmailField('Электронная почта', max_length=120, unique=True, null=False)
     password: str = models.CharField('Пароль', max_length=60, null=False)
 
     def __str__(self):
-        return self.username
+        return self.user_name
+
+    class Meta:
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
 
 
 class Flower(models.Model):
@@ -22,6 +26,10 @@ class Flower(models.Model):
     def __str__(self):
         return self.posy_name
 
+    class Meta:
+        verbose_name = 'Букет'
+        verbose_name_plural = 'Букеты'
+
 
 class Order(models.Model):
     user: str = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -29,4 +37,8 @@ class Order(models.Model):
     order_date: str = models.DateTimeField('Дата заказа', auto_now_add=True)
 
     def __str__(self):
-        return f'Order #{self.id} by {self.user.username} for {self.flower.posy_name}'
+        return f'Заказ №{self.id} от {self.user.user_name} букет {self.flower.posy_name}'
+
+    class Meta:
+        verbose_name = 'Заказ'
+        verbose_name_plural = 'Заказы'

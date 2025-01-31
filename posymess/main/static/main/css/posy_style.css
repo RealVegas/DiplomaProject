@@ -190,23 +190,6 @@ p{
     background-image: url("../img/next.svg");
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*--Контакты--*/
 .loc-card{
     font-family: "Didact Gothic", serif;
@@ -264,40 +247,37 @@ p{
   border-radius: 10px; /* Закругленные края полей ввода */
 }
 
-/*------------*/
+/*---Вход в аккаунт---*/
 .col-form-label{
-    font-family: "Roboto", sans-serif;
+    font-family: "Didact Gothic", serif;
     font-size: 18px;
-    font-weight: 300;
-    font-style: normal;
-    color: #505050;
-}
-
-.form-check-label{
-    font-family: "Roboto", sans-serif;
-    font-size: 18px;
-    font-weight: 300;
-    font-style: normal;
-    color: #505050;
-}
-
-.page-title{
-    font-family: "Roboto", sans-serif;
-    font-size: 25px;
-    font-weight: 800;
-    font-style: normal;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    color: #505050;
-}
-
-.news-text{
-    font-family: "Roboto", sans-serif;
-    font-size: 22px;
     font-weight: 500;
     font-style: normal;
-    color: #505050;
+    color: #646464;
 }
+
+h4{
+    font-family: "Didact Gothic", serif;
+    font-size: 24px;
+    font-weight: 500;
+    font-style: normal;
+    color: #FFFFFF;
+}
+
+.form-control{
+    font-family: "Didact Gothic", serif;
+    font-size: 17px;
+    font-weight: 500;
+    font-style: normal;
+    color: #BEBEBE;
+}
+
+
+
+
+
+
+
 
 
 

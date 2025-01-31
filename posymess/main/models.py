@@ -4,7 +4,7 @@ from django.db import models
 class User(models.Model):
     user_name: str = models.CharField('Имя пользователя', max_length=50, unique=True, null=False)
     email: str = models.EmailField('Электронная почта', max_length=120, unique=True, null=False)
-    password: str = models.CharField('Пароль', max_length=60, null=False)
+    password: str = models.CharField('Пароль', max_length=200, null=False)
 
     def __str__(self):
         return self.user_name

@@ -1,32 +1,8 @@
-<!--{% load static %}-->
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Вход</title>
-    <link rel="preconnect" href="https://fonts.google.com/">
-    <link href="https://fonts.googleapis.com/css2?family=Didact+Gothic&family=Questrial&family=Roboto:wght@100..900&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../../static/main/css/posy_style.css" type="text/css" rel="stylesheet">
-</head>
-<body>
-    <header>
-        <div class="brand-bar">
-            <img class="brand_logo" src="../../static/main/img/pm_logo.png" alt="Logo">
-        </div>
-        <div class="brand-bond">
-            <p class="br-item">Адрес в Екатеринурге: ул. Луначарского, д.214</p>
-            <p class="br-item">Телефон: 8 (343) 226-46-32</p>
-            <p class="br-item">E-mail: <a href="mailto:order@posy.ru?subject=Заказ">order@posy.ru</a></p>
-            <p class="br-item">Telegram: <a href="https://t.me/Vegas_Real_Bot">прием заказов в Telegram</a></p>
-        </div>
-        <div class="header-button">
-            <a class="btn btn-outline-light" href="#" role="button">Регистрация</a>
-            <a class="btn btn-outline-light" href="#" role="button">Вход</a>
-        </div>
-    </header>
+{% extends 'main/layout.html' %}
 
+{% block title %}Вход{% endblock %}
+
+{% block content %}
      <div class="container mt-2">
         <div class="card shadow-lg" style="height: 245px;">
             <div class="card-header text-center bg-primary text-white">
@@ -34,6 +10,7 @@
             </div>
             <div class="card-body">
                 <form method="post">
+                    {% csrf_token %}
                     <div class="form-group row align-items-center">
                         <label for="email" class="col-sm-4 col-form-label text-right">Электронная почта:</label>
                         <div class="col-sm-8">
@@ -56,7 +33,4 @@
             </div>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+{% endblock %}

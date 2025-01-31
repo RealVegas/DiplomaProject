@@ -1,26 +1,38 @@
-from django.shortcuts import render
-from .models import User, Flower, Order
-
-
-# Create your views here.
-def index(request):
-    return render(request, 'main/index.html')
+from django.shortcuts import render, redirect
+from .forms import RegisterForm
+from django.http import HttpResponse
 
 
 # Регистрация
 def register(request):
-    error = ''
-    form = RegisterForm()
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('index')
+            # return redirect('login')
+            return HttpResponse("Регистрация прошла успешно! Вы можете войти.")
         else:
-            error = 'Неверные данные'
-    return render(request, 'main/register.html', {'form': form, 'error': error})
+            return render(request, 'main/register.html', {'form': form})
+    else:
+        form = RegisterForm()
+        return render(request, 'main/register.html', {'form': form})
 
 
-# def flower_list(request):
-#     flowers = Flower.objects.all()
-#     return render(request, 'flower_list.html', {'flowers': flowers})
+# Главная страница
+def layout(request):
+    return render(request, 'main/layout.html')
+
+
+# Выход
+def logout(request):
+    return render(request, 'main/layout.html')
+
+
+# Вход
+def login(request):
+    return render(request, 'main/login.html')
+
+
+def flower_list(request):
+    flowers = Flower.objects.all()
+    return render(request, 'flower_list.html', {'flowers': flowers})

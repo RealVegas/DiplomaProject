@@ -52,17 +52,17 @@ header{
     grid-template-columns: 1fr 1fr; /* две колонки */
 }
 
-.bond{
-  font-family: "Didact Gothic", serif;
-  font-size: 18px;
-  font-weight: 400;
-  color: #FFFFFF;
-  margin-bottom: 5px;
+.br-item{
+    font-family: "Didact Gothic", serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: #FFFFFF;
+    margin-bottom: 5px;
 }
 
 a{
-  color: #B4FFFF;
-  text-decoration: none;
+    color: #B4FFFF;
+    text-decoration: none;
 }
 
 /*---Кнопки на верхней панели---*/
@@ -146,8 +146,18 @@ a{
     padding: 20px;
     margin: 20px auto;
     border-radius: 10px;
-    border: 1px solid #000;
+    border: 2px solid #969696;
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.btn.btn-primary{
+    font-size: 18px;
+    width: 100px;
+}
+
+.btn.btn-primary.disabled{
+    background-color: #323232;
+    width: 400px;
 }
 
 h5{
@@ -159,21 +169,51 @@ p{
     font-size: 20px;
 }
 
-.btn.btn-primary{
+/*--Контакты--*/
+.loc-card{
+    font-family: "Didact Gothic", serif;
+    font-weight: 400;
+    color: #505050;
+    text-align: center;
+    width: 850px;
+    height: 755px;
+    padding: 20px;
+    margin: 0 auto;
+    border-radius: 10px;
+    border: 2px solid #969696;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.card-bond{
+    position: relative;
+    top: 20px;
+    width: 850px;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* две колонки */
+}
+
+.ca-item{
+    font-family: "Didact Gothic", serif;
+    font-size: 20px;
+    font-weight: 500;
+    color: #323232;
+    margin-bottom: 5px;
+}
+
+.btn.btn-primary.outer{
+    margin-top: 5px;
     font-size: 18px;
-    width: 400px;
+    width: 250px;
 }
 
-.btn.btn-primary.disabled{
-    background-color: #323232;
-    width: 400px;
+.loc-img{
+    position: relative;
+    top: 40px;
+    width: 800px;
+    height: auto;
+    border-radius: 10px;
+    border: 1px solid #323232;
 }
-
-
-
-
-
-
 
 /*---Форма регистрации---*/
 .card-custom{

@@ -272,6 +272,13 @@ h4{
     color: #BEBEBE;
 }
 
+.form-group {
+    margin-bottom: 5px; /* Увеличиваем расстояние между полями */
+}
+
+button{
+    margin-top: 10px;
+}
 
 
 

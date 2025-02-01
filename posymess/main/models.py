@@ -2,9 +2,10 @@ from django.db import models
 
 
 class User(models.Model):
-    user_name: str = models.CharField('Имя пользователя', max_length=50, unique=True, null=False)
+    user_name: str = models.CharField('Имя пользователя', max_length=50, unique=False, null=False)
     email: str = models.EmailField('Электронная почта', max_length=120, unique=True, null=False)
     password: str = models.CharField('Пароль', max_length=200, null=False)
+    last_login = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
     def __str__(self):
         return self.user_name

@@ -1,6 +1,6 @@
 import re
 from django.db import IntegrityError
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, check_password
 from .models import User
 
 
@@ -87,41 +87,6 @@ class LoginForm:
         return any(self.verify_data())
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Проверка имени пользователя
 def clean_name(some_name: str) -> str | None:
     if not some_name:
@@ -169,6 +134,23 @@ def add_user(reg_data: dict[str, str]) -> User | str:
         return 'Ошибка создания пользователя. Попробуйте еще раз'
 
 
+# Проверка авторизации
+def check_auth(log_data) -> int | User:
+    pass_list = [False, False]
+    name = None
+
+    pass_list[0] = User.objects.filter(email=log_data['email']).exists() # noqa PyUnresolvedReferences
+
+    if pass_list[0]:
+        name = User.objects.get(email=log_data['email']) # noqa PyUnresolvedReferences
+        pass_list[1] = check_password(log_data['password'], name.password)
+
+    if not pass_list[0]:
+        return 1
+    elif not pass_list[1]:
+        return 0
+    else:
+        return name
 
 
 

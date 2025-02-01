@@ -1,9 +1,7 @@
 from django.contrib.auth import login
 from django.shortcuts import render, redirect
-from .models import User  # , Flower
-from .forms import RegisterForm, LoginForm, add_user
-from django.contrib.auth.hashers import check_password
-from django.contrib.auth.hashers import make_password
+from .models import User
+from .forms import RegisterForm, LoginForm, add_user, check_auth
 
 
 # Регистрация
@@ -64,25 +62,6 @@ def user_login(request):
 
     # Если метод не POST — отображаем страницу регистрации (пустая форма)
     return render(request, 'main/login.html')
-
-
-# Проверка авторизации
-def check_auth(login_data) -> int | str:
-    pass_list = [False, False]
-    name = None
-
-    pass_list[0] = User.objects.filter(email=login_data['email']).exists() # noqa PyUnresolvedReferences
-
-    if pass_list[0]:
-        name = User.objects.get(email=login_data['email']) # noqa PyUnresolvedReferences
-        pass_list[1] = check_password(login_data['password'], name.password)
-
-    if not pass_list[0]:
-        return 1
-    elif not pass_list[1]:
-        return 0
-    else:
-        return name
 
 
 # Главная страница

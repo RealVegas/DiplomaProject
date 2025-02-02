@@ -15,10 +15,10 @@
     <div class="brand-bar">
         <img class="brand_logo" src="{% static 'main/img/pm_logo.png' %}" alt="Logo">
     </div>
-    {% include 'main/header.html' %}
+    {% include 'header.html' %}
 </header>
 {% if user.is_authenticated %}
-    {% include 'main/navbar.html' %}
+    {% include 'navbar.html' %}
 {% endif %}
 
 {% block content %}

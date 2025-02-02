@@ -1,12 +1,19 @@
-from django.contrib.auth import authenticate, login
+from typing import Union
+
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from .models import User
 from .forms import RegisterForm, LoginForm
 from .forms import add_user, check_auth
 
 
+# Главная страница
+def layout(request):
+    return render(request, 'layout.html')
+
+
 # Регистрация
-def user_register(request):
+def user_register(request) -> render:
     errors = []
 
     if request.method == 'POST':
@@ -15,29 +22,29 @@ def user_register(request):
         if register_form.not_valid():
             errors = register_form.get_errors()
             print(errors)
-            return render(request, 'main/register.html', {'errors': errors})
+            return render(request, 'register.html', {'errors': errors})
 
         reg_data = register_form.pass_data()
 
         if User.objects.filter(email=reg_data['email']).exists(): # noqa PyUnresolvedReferences
             errors.append('Пользователь с таким email уже существует')
-            return render(request, 'main/register.html', {'errors': errors})
+            return render(request, 'register.html', {'errors': errors})
 
         answer = add_user(reg_data)
 
         if isinstance(answer, str):
             errors.append(answer)
-            return render(request, 'main/register.html', {'errors': errors})
+            return render(request, 'register.html', {'errors': errors})
         else:
             message = 'Вы успешно зарегистрировались в Posy message, воспользуйтесь кнопкой Вход чтобы войти в аккаунт'
-            return render(request, 'main/register.html', {'message': message})
+            return render(request, 'register.html', {'message': message})
 
     # Если метод не POST — отображаем страницу регистрации (пустая форма)
-    return render(request, 'main/register.html')
+    return render(request, 'register.html')
 
 
 # Авторизация
-def user_login(request):
+def user_login(request) -> Union[render, redirect]:
     errors: list[str] = []
     exit_message = ['Неверный пароль', 'Такая почта еще не зарегистрирована']
 
@@ -46,7 +53,7 @@ def user_login(request):
 
         if login_form.not_valid():
             errors = login_form.get_errors()
-            return render(request, 'main/login.html', {'errors': errors})
+            return render(request, 'login.html', {'errors': errors})
 
         login_data = login_form.pass_data()
 
@@ -59,20 +66,17 @@ def user_login(request):
 
         else:
             errors.append(exit_message[mail])
-            return render(request, 'main/login.html', {'errors': errors})
+            return render(request, 'login.html', {'errors': errors})
 
     # Если метод не POST — отображаем страницу регистрации (пустая форма)
-    return render(request, 'main/login.html')
+    return render(request, 'login.html')
 
-
-# Главная страница
-def layout(request):
-    return render(request, 'main/layout.html')
 
 
 # Выход
-def logout(request):
-    return render(request, 'main/logout.html')
+def user_logout(request) -> redirect:
+    logout(request)
+    return redirect('login')
 
 
 def flower_list(request):

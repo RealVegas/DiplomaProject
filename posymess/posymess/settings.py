@@ -58,7 +58,7 @@ ROOT_URLCONF = 'posymess.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'main/templates/main'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

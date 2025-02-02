@@ -25,8 +25,10 @@ SECRET_KEY = 'django-insecure-0lg6mt3num7zurq!9x=be1-9u&#y44i3t7=nnzutdq60f+%ej6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+AUTH_USER_MODEL = 'main.User'
 
+
+ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -74,13 +76,14 @@ WSGI_APPLICATION = 'posymess.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

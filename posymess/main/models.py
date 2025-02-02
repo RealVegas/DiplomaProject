@@ -1,14 +1,19 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser, UserManager
 
 
-class User(models.Model):
-    user_name: str = models.CharField('Имя пользователя', max_length=50, unique=False, null=False)
+class User(AbstractUser, models.Model):
+    username: str = models.CharField('Имя пользователя', max_length=50, unique=True, null=False)
     email: str = models.EmailField('Электронная почта', max_length=120, unique=True, null=False)
     password: str = models.CharField('Пароль', max_length=200, null=False)
-    last_login = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    is_active: bool = models.BooleanField('Активен', default=True)
+    is_staff: bool = models.BooleanField('Доступ к админ панели', default=False)
+    last_login = models.DateTimeField('Последний вход', auto_now_add=True, null=True, blank=True)
+
+    objects = UserManager()
 
     def __str__(self):
-        return self.user_name
+        return self.username
 
     class Meta:
         verbose_name = 'Пользователь'
@@ -16,7 +21,7 @@ class User(models.Model):
 
 
 class Flower(models.Model):
-    posy_name: str = models.CharField('Название букета', max_length=50, unique=True, null=False)
+    posyname: str = models.CharField('Название букета', max_length=50, unique=True, null=False)
     price: float = models.DecimalField('Цена', max_digits=10, decimal_places=2)
 
     def __str__(self):

@@ -11,20 +11,20 @@ class RegisterForm:
         self.clean_data: dict[str, str] = {}
         self.errors: dict[str, str] = {}
 
-        self.user_name: str = self.raw_data.get('user_name', '')
+        self.username: str = self.raw_data.get('username', '')
         self.email: str = self.raw_data.get('email', '')
         self.password: str = self.raw_data.get('password', '')
         self.confirm_password: str = self.raw_data.get('confirm_password', '')
 
     def clean_raw(self) -> None:
-        self.clean_data['user_name'] = clean_name(self.user_name)
+        self.clean_data['username'] = clean_name(self.username)
         self.clean_data['email'] = clean_email(self.email)
         self.clean_data['password'] = clean_password(self.password, self.confirm_password)
 
     def verify_data(self) -> list[bool]:
         wrong_list: list[bool] = [False, False, False]
 
-        wrong_list[0] = not self.clean_data['user_name']
+        wrong_list[0] = not self.clean_data['username']
         wrong_list[1] = not self.clean_data['email']
         wrong_list[2] = self.clean_data['password'].startswith('Пароль')
 
@@ -33,7 +33,7 @@ class RegisterForm:
     def pass_data(self, error_list: list[bool]) -> dict[str, str]:
 
         if error_list[0]:
-            self.errors['user_name'] = 'Некорректное имя пользователя, используйте только буквы'
+            self.errors['username'] = 'Некорректное имя пользователя, используйте только буквы'
         if error_list[1]:
             self.errors['email'] = 'Некорректный адрес электронной почты'
         if error_list[2]:
@@ -114,7 +114,8 @@ def clean_password(some_password: str, some_confirm: str) -> str:
         return 'Пароль должен содержать не менее 3 символов'
 
     if some_password == some_confirm:
-        return make_password(some_password)
+        return some_password
+        return #make_password(some_password)
     else:
         return 'Пароль не прошел проверку: введенные пароли не совпадают'
 
@@ -123,8 +124,8 @@ def clean_password(some_password: str, some_confirm: str) -> str:
 def add_user(reg_data: dict[str, str]) -> User | str:
     try:
         # noinspection PyUnresolvedReferences
-        user = User.objects.create(
-                user_name=reg_data['user_name'],
+        user = User.objects.create_user(
+                username=reg_data['username'],
                 email=reg_data['email'],
                 password=reg_data['password'],
         )

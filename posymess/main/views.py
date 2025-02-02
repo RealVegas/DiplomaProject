@@ -1,7 +1,8 @@
-from django.contrib.auth import login
+from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from .models import User
-from .forms import RegisterForm, LoginForm, add_user, check_auth
+from .forms import RegisterForm, LoginForm
+from .forms import add_user, check_auth
 
 
 # Регистрация
@@ -25,11 +26,12 @@ def user_register(request):
 
         answer = add_user(reg_data)
 
-        if answer == 'Ошибка создания пользователя. Попробуйте еще раз':
+        if answer == 'Ошибка создания пользователя в БД. Попробуйте еще раз':
             errors['create_user'] = answer
             return render(request, 'main/register.html', {'errors': errors})
-
-        return redirect('login')
+        else:
+            message = 'Вы успешно зарегистрировались в Posy message, воспользуйтесь кнопкой Вход чтобы войти в аккаунт'
+            return render(request, 'main/register.html', {'message': message})
 
     # Если метод не POST — отображаем страницу регистрации (пустая форма)
     return render(request, 'main/register.html')
@@ -50,14 +52,19 @@ def user_login(request):
         fault_list = login_form.verify_data()
         login_data = login_form.pass_data(fault_list)
 
-        user_name = check_auth(login_data)
+        username = check_auth(login_data)
 
-        if isinstance(user_name, User):
-            login(request, user_name)
+        if isinstance(username, User):
+            request.user = username
+            print(username.is_active)
+            test_user = authenticate(request, username=username, password=login_data['password'])
+            print(f'authenticated user: {test_user}')
+            print(f'request user: {request.user} | authenticated: {request.user.is_authenticated}')
+            login(request, username)
             return redirect('layout')
 
         else:
-            errors['login'] = exit_message[user_name]
+            errors['login'] = exit_message[username]
             return render(request, 'main/login.html', {'errors': errors})
 
     # Если метод не POST — отображаем страницу регистрации (пустая форма)
@@ -74,6 +81,6 @@ def logout(request):
     return render(request, 'main/logout.html')
 
 
-# def flower_list(request):
-#     flowers = Flower.objects.all()
-#     return render(request, 'flower_list.html', {'flowers': flowers})
+def flower_list(request):
+    flowers = Flower.objects.all()
+    return render(request, 'flower_list.html', {'flowers': flowers})

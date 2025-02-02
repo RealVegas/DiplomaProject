@@ -12,6 +12,22 @@ def layout(request):
     return render(request, 'layout.html')
 
 
+# Заказ цветов
+def flowers(request):
+    settings = {'pri_active': 'active'}
+    return render(request, 'flowers.html', context=settings)
+
+# def flower_list(request):
+#     flowers = Flower.objects.all()
+#     return render(request, 'flower_list.html', {'flowers': flowers})
+
+
+# Контакты
+def bond(request):
+    settings = {'sec_active': 'active'}
+    return render(request, 'bond.html', context=settings)
+
+
 # Регистрация
 def user_register(request) -> render:
     errors = []
@@ -62,7 +78,7 @@ def user_login(request) -> Union[render, redirect]:
         if isinstance(mail, User):
             user_mail = authenticate(request, username=mail, password=login_data['password'])
             login(request, user_mail)
-            return redirect('layout')
+            return redirect('flowers')
 
         else:
             errors.append(exit_message[mail])
@@ -72,13 +88,7 @@ def user_login(request) -> Union[render, redirect]:
     return render(request, 'login.html')
 
 
-
 # Выход
 def user_logout(request) -> redirect:
     logout(request)
     return redirect('login')
-
-
-def flower_list(request):
-    flowers = Flower.objects.all()
-    return render(request, 'flower_list.html', {'flowers': flowers})

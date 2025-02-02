@@ -7,27 +7,26 @@ from .forms import add_user, check_auth
 
 # Регистрация
 def user_register(request):
-    errors = {}
+    errors = []
 
     if request.method == 'POST':
         register_form = RegisterForm(request.POST)
 
         if register_form.not_valid():
-            errors = register_form.errors
+            errors = register_form.get_errors()
+            print(errors)
             return render(request, 'main/register.html', {'errors': errors})
 
-        fault_list = register_form.verify_data()
-        reg_data = register_form.pass_data(fault_list)
+        reg_data = register_form.pass_data()
 
-        # noinspection PyUnresolvedReferences
-        if User.objects.filter(email=reg_data['email']).exists():
-            errors['email_exists'] = "Пользователь с таким email уже существует."
+        if User.objects.filter(email=reg_data['email']).exists(): # noqa PyUnresolvedReferences
+            errors.append('Пользователь с таким email уже существует')
             return render(request, 'main/register.html', {'errors': errors})
 
         answer = add_user(reg_data)
 
-        if answer == 'Ошибка создания пользователя в БД. Попробуйте еще раз':
-            errors['create_user'] = answer
+        if isinstance(answer, str):
+            errors.append(answer)
             return render(request, 'main/register.html', {'errors': errors})
         else:
             message = 'Вы успешно зарегистрировались в Posy message, воспользуйтесь кнопкой Вход чтобы войти в аккаунт'
@@ -39,32 +38,27 @@ def user_register(request):
 
 # Авторизация
 def user_login(request):
-    errors = {}
+    errors: list[str] = []
     exit_message = ['Неверный пароль', 'Такая почта еще не зарегистрирована']
 
     if request.method == 'POST':
         login_form = LoginForm(request.POST)
 
         if login_form.not_valid():
-            errors = login_form.errors
+            errors = login_form.get_errors()
             return render(request, 'main/login.html', {'errors': errors})
 
-        fault_list = login_form.verify_data()
-        login_data = login_form.pass_data(fault_list)
+        login_data = login_form.pass_data()
 
-        username = check_auth(login_data)
+        mail = check_auth(login_data)
 
-        if isinstance(username, User):
-            request.user = username
-            print(username.is_active)
-            test_user = authenticate(request, username=username, password=login_data['password'])
-            print(f'authenticated user: {test_user}')
-            print(f'request user: {request.user} | authenticated: {request.user.is_authenticated}')
-            login(request, username)
+        if isinstance(mail, User):
+            user_mail = authenticate(request, username=mail, password=login_data['password'])
+            login(request, user_mail)
             return redirect('layout')
 
         else:
-            errors['login'] = exit_message[username]
+            errors.append(exit_message[mail])
             return render(request, 'main/login.html', {'errors': errors})
 
     # Если метод не POST — отображаем страницу регистрации (пустая форма)

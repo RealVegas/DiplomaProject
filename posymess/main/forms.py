@@ -9,7 +9,7 @@ class RegisterForm:
     def __init__(self, raw_data: dict[str, str] | None = None) -> None:
         self.raw_data: dict[str, str] = raw_data
         self.clean_data: dict[str, str] = {}
-        self.errors: dict[str, str] = {}
+        self.errors: list[str] = []
 
         self.username: str = self.raw_data.get('username', '')
         self.email: str = self.raw_data.get('email', '')
@@ -30,21 +30,22 @@ class RegisterForm:
 
         return wrong_list
 
-    def pass_data(self, error_list: list[bool]) -> dict[str, str]:
+    def get_errors(self) -> list[str]:
+        found_errors = self.verify_data()
 
-        if error_list[0]:
-            self.errors['username'] = 'Некорректное имя пользователя, используйте только буквы'
-        if error_list[1]:
-            self.errors['email'] = 'Некорректный адрес электронной почты'
-        if error_list[2]:
-            self.errors['password'] = self.clean_data['password']
+        if found_errors[0]:
+            self.errors.append('Некорректное имя пользователя, используйте только буквы')
+        if found_errors[1]:
+            self.errors.append('Некорректный адрес электронной почты')
+        if found_errors[2]:
+            self.errors.append(self.clean_data['password'])
 
-        if self.errors:
-            return self.errors
-        else:
-            return self.clean_data
+        return self.errors
 
-    def not_valid(self):
+    def pass_data(self) -> dict[str, str]:
+        return self.clean_data
+
+    def not_valid(self) -> bool:
         self.clean_raw()
         return any(self.verify_data())
 
@@ -54,7 +55,7 @@ class LoginForm:
     def __init__(self, raw_data: dict[str, str] | None = None) -> None:
         self.raw_data: dict[str, str] = raw_data
         self.clean_data: dict[str, str] = {}
-        self.errors: dict[str, str] = {}
+        self.errors: list[str] = []
         self.email: str = self.raw_data.get('email', '')
         self.password: str = self.raw_data.get('password', '')
 
@@ -70,19 +71,20 @@ class LoginForm:
 
         return wrong_list
 
-    def pass_data(self, error_list: list[bool]) -> None | dict[str, str] | bool:
+    def get_errors(self) -> list[str]:
+        found_errors = self.verify_data()
 
-        if error_list[0]:
-            self.errors['email'] = 'Некорректный адрес электронной почты'
-        if error_list[1]:
-            self.errors['password'] = 'Пароль должен содержать не менее 3 символов'
+        if found_errors[0]:
+            self.errors.append('Некорректный адрес электронной почты')
+        if found_errors[1]:
+            self.errors.append('Пароль должен содержать не менее 3 символов')
 
-        if self.errors:
-            return self.errors
-        else:
-            return self.clean_data
+        return self.errors
 
-    def not_valid(self):
+    def pass_data(self) -> dict[str, str]:
+        return self.clean_data
+
+    def not_valid(self) -> bool:
         self.clean_raw()
         return any(self.verify_data())
 
@@ -115,7 +117,6 @@ def clean_password(some_password: str, some_confirm: str) -> str:
 
     if some_password == some_confirm:
         return some_password
-        return #make_password(some_password)
     else:
         return 'Пароль не прошел проверку: введенные пароли не совпадают'
 
@@ -123,35 +124,36 @@ def clean_password(some_password: str, some_confirm: str) -> str:
 # Создание нового пользователя в БД
 def add_user(reg_data: dict[str, str]) -> User | str:
     try:
-        # noinspection PyUnresolvedReferences
-        user = User.objects.create_user(
+        user = User(
                 username=reg_data['username'],
-                email=reg_data['email'],
-                password=reg_data['password'],
+                email=reg_data['email']
         )
+        user.set_password(reg_data['password'])
+
+        user.save()
         return user
 
-    except IntegrityError:
-        return 'Ошибка создания пользователя. Попробуйте еще раз'
+    except Exception as err:
+        return f'Ошибка: {str(err)}'
 
 
 # Проверка авторизации
 def check_auth(log_data) -> int | User:
     pass_list = [False, False]
-    name = None
+    email = None
 
     pass_list[0] = User.objects.filter(email=log_data['email']).exists() # noqa PyUnresolvedReferences
 
     if pass_list[0]:
-        name = User.objects.get(email=log_data['email']) # noqa PyUnresolvedReferences
-        pass_list[1] = check_password(log_data['password'], name.password)
+        email = User.objects.get(email=log_data['email']) # noqa PyUnresolvedReferences
+        pass_list[1] = check_password(log_data['password'], email.password)
 
     if not pass_list[0]:
         return 1
     elif not pass_list[1]:
         return 0
     else:
-        return name
+        return email
 
 
 

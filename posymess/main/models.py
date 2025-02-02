@@ -2,22 +2,21 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager
 
 
-class User(AbstractUser, models.Model):
-    username: str = models.CharField('Имя пользователя', max_length=50, unique=True, null=False)
-    email: str = models.EmailField('Электронная почта', max_length=120, unique=True, null=False)
-    password: str = models.CharField('Пароль', max_length=200, null=False)
-    is_active: bool = models.BooleanField('Активен', default=True)
-    is_staff: bool = models.BooleanField('Доступ к админ панели', default=False)
-    last_login = models.DateTimeField('Последний вход', auto_now_add=True, null=True, blank=True)
+class User(AbstractUser):
+    email = models.EmailField('Электронная почта', max_length=100, unique=True, null=False)
+    username = models.CharField('Имя пользователя', max_length=100, unique=False, null=False)
 
     objects = UserManager()
 
-    def __str__(self):
-        return self.username
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
 
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
+
+    def __str__(self):
+        return self.email
 
 
 class Flower(models.Model):
@@ -25,7 +24,7 @@ class Flower(models.Model):
     price: float = models.DecimalField('Цена', max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return self.posy_name
+        return self.posyname
 
     class Meta:
         verbose_name = 'Букет'
@@ -38,7 +37,7 @@ class Order(models.Model):
     order_date: str = models.DateTimeField('Дата заказа', auto_now_add=True)
 
     def __str__(self):
-        return f'Заказ №{self.id} от {self.user.user_name} букет {self.flower.posy_name}'
+        return f'Заказ №{self.id} от {self.user.email} букет {self.flower.posyname}' # noqa UnresolvedReference
 
     class Meta:
         verbose_name = 'Заказ'

@@ -44,8 +44,8 @@
                 </form>
             </div>
             <p class = "text-danger" style="margin-top: 20px;">
-                {% for err_key, err_value in errors.items %}
-                    {{ err_value }}<br>
+                {% for item in errors %}
+                    {{ item }}<br>
                 {% endfor %}
             </p>
             <p class = "text-success" style="margin-top: -20px;">

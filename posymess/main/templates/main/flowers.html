@@ -7,12 +7,12 @@
     <div id="flower-carousel" class="carousel slide">
         {% for item in posies %}
             <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                <div class="card">
+                <div class="card main">
                     <img src="{% static item.posy_path %}" class="card-img-top" alt="{{ item.posy_name }}">
                     <div class="card-body">
                         <h5 class="card-title">{{ item.posy_name }}</h5>
                         <p class="card-text">{{ item.price}} ₽</p>
-                        <a href="#" class="btn btn-primary">Заказать</a>
+                        <a href="{% url 'order' item.posy_name %}" class="btn btn-primary">Заказать</a>
                     </div>
                 </div>
             </div>

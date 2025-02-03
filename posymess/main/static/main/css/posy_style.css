@@ -136,7 +136,7 @@ a{
 }
 
 /*--Карточка букета--*/
-.card{
+.card.main{
     font-family: "Didact Gothic", serif;
     font-weight: 400;
     color: #505050;
@@ -161,6 +161,7 @@ a{
     width: 100px;
 }
 
+
 .btn.btn-primary.disabled{
     background-color: #323232;
     width: 400px;
@@ -173,6 +174,26 @@ h5{
 
 p{
     font-size: 20px;
+}
+
+/*--Стили для страницы заказов--*/
+.card{
+    font-family: "Didact Gothic", serif;
+    font-weight: 400;
+    color: #505050;
+    text-align: center;
+    width: 750px;
+    padding: 5px;
+    margin: 20px auto;
+    border-radius: 10px;
+    border: 2px solid #969696;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.card p{
+    font-size: 18px;
+    margin-top: 10px;
+    text-align: left;
 }
 
 /*--Цветочная карусель--*/
@@ -199,7 +220,7 @@ p{
     width: 850px;
     height: 755px;
     padding: 20px;
-    margin: 0 auto;
+    margin: 20px auto;
     border-radius: 10px;
     border: 2px solid #969696;
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);

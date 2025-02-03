@@ -1,8 +1,9 @@
 from typing import Union
 
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render, redirect
-from .models import User, Flower
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import User, Flower, Order
 from .forms import RegisterForm, LoginForm
 from .forms import add_user, check_auth
 
@@ -12,7 +13,7 @@ def layout(request):
     return render(request, 'layout.html')
 
 
-# Заказ цветов
+# Цветы
 def flowers(request):
     initial: dict = {'pri_active': 'active'}
     posies: list = Flower.objects.all() # noqa PyUnresolvedReferences
@@ -21,6 +22,24 @@ def flowers(request):
 
     return render(request, 'flowers.html', context=settings)
 
+
+# Кнопка заказать
+@login_required
+def new_order(request, posy_name):
+    flower = get_object_or_404(Flower, posy_name=posy_name)
+    user = request.user
+
+    order = Order.objects.create(user=request.user, flower=flower) # noqa PyUnresolvedReferences
+    return redirect('orders')
+
+
+# Список заказов
+@login_required
+def orders_list(request):
+    user_orders = Order.objects.filter(user=request.user)  # noqa PyUnresolvedReferences
+    #user_orders = Order.objects.filter(user=request.user).select_related('flower') # noqa PyUnresolvedReferences
+
+    return render(request, 'orders.html', {'orders': user_orders})
 
 # Контакты
 def bond(request):

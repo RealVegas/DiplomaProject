@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+
+{% block title %}Заказы{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <div class="card-header text-center bg-primary text-white">
+            <h4 class="mb-0">Ваши заказы</h4>
+        </div>
+        {% for order in orders %}
+            <p>Заказ №{{ order.id }}: "{{ order.flower.posy_name }}" — {{ order.order_date }}</p>
+        {% empty %}
+            <p>Заказов нет</p>
+        {% endfor %}
+        <div class="d-flex justify-content-center mt-3">
+            <a href="{% url 'flowers' %}" class="btn btn-primary w-100">Вернутся к выбору букетов</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

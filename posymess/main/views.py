@@ -13,7 +13,7 @@ def layout(request):
     return render(request, 'layout.html')
 
 
-# Цветы
+# Заказ букетов
 def flowers(request):
     initial: dict = {'pri_active': 'active'}
     posies: list = Flower.objects.all() # noqa PyUnresolvedReferences
@@ -33,6 +33,7 @@ def make_order(request, posy_name):
 
 
 # Удаление заказа
+@login_required
 def delete_order(request, order_id):
     if request.method == 'POST':
         order = get_object_or_404(Order, id=order_id)

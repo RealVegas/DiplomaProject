@@ -5,88 +5,18 @@
 {% block content %}
 <!--{% load static %}-->
     <div id="flower-carousel" class="carousel slide">
-        <div class="carousel-inner">
-            <div class="carousel-item active">
+        {% for item in posies %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
                 <div class="card">
-                    <img src="{% static 'main/img/posies/small_01.png' %}" class="card-img-top" alt="букет">
+                    <img src="{% static item.posy_path %}" class="card-img-top" alt="{{ item.posy_name }}">
                     <div class="card-body">
-                        <h5 class="card-title">Ландыши</h5>
-                        <p class="card-text">2 000 ₽</p>
+                        <h5 class="card-title">{{ item.posy_name }}</h5>
+                        <p class="card-text">{{ item.price}} ₽</p>
                         <a href="#" class="btn btn-primary">Заказать</a>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="carousel-item">
-            <div class="card">
-                <img src="{% static 'main/img/posies/small_02.png' %}" class="card-img-top" alt="букет">
-                <div class="card-body">
-                    <h5 class="card-title">Красные и белые розы</h5>
-                    <p class="card-text">3 500 ₽</p>
-                    <a href="#" class="btn btn-primary">Заказать</a>
-                </div>
-            </div>
-        </div>
-        <div class="carousel-item">
-            <div class="card">
-                <img src="{% static 'main/img/posies/small_03.png' %}" class="card-img-top" alt="букет">
-                <div class="card-body">
-                    <h5 class="card-title">Фиолетовый букет из роз и хризантем</h5>
-                    <p class="card-text">4 000 ₽</p>
-                    <a href="#" class="btn btn-primary">Заказать</a>
-                </div>
-            </div>
-        </div>
-        <div class="carousel-item">
-            <div class="card">
-                <img src="{% static 'main/img/posies/small_04.png' %}" class="card-img-top" alt="букет">
-                <div class="card-body">
-                    <h5 class="card-title">Желтые розы</h5>
-                    <p class="card-text">1 700 ₽</p>
-                    <a href="#" class="btn btn-primary">Заказать</a>
-                </div>
-            </div>
-        </div>
-        <div class="carousel-item">
-            <div class="card">
-                <img src="{% static 'main/img/posies/small_05.png' %}" class="card-img-top" alt="букет">
-                <div class="card-body">
-                    <h5 class="card-title">Розовые розы, нарциссы и сирень</h5>
-                    <p class="card-text">2 500 ₽</p>
-                    <a href="#" class="btn btn-primary">Заказать</a>
-                </div>
-            </div>
-        </div>
-        <div class="carousel-item">
-            <div class="card">
-                <img src="{% static 'main/img/posies/small_06.png' %}" class="card-img-top" alt="букет">
-                <div class="card-body">
-                    <h5 class="card-title">Желтые тюльпаны</h5>
-                    <p class="card-text">3 000 ₽</p>
-                    <a href="#" class="btn btn-primary">Заказать</a>
-                </div>
-            </div>
-        </div>
-        <div class="carousel-item">
-            <div class="card">
-                <img src="{% static 'main/img/posies/small_07.png' %}" class="card-img-top" alt="букет">
-                <div class="card-body">
-                    <h5 class="card-title">Герберы и розы</h5>
-                    <p class="card-text">2 700 ₽</p>
-                    <a href="#" class="btn btn-primary">Заказать</a>
-                </div>
-            </div>
-        </div>
-        <div class="carousel-item">
-            <div class="card">
-                <img src="{% static 'main/img/posies/small_08.png' %}" class="card-img-top" alt="букет">
-                <div class="card-body">
-                    <h5 class="card-title">Желтые розы</h5>
-                    <p class="card-text">3 400 ₽</p>
-                    <a href="#" class="btn btn-primary">Заказать</a>
-                </div>
-            </div>
-        </div>
+        {% endfor %}
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#flower-carousel" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>

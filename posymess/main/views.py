@@ -2,7 +2,7 @@ from typing import Union
 
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
-from .models import User
+from .models import User, Flower
 from .forms import RegisterForm, LoginForm
 from .forms import add_user, check_auth
 
@@ -14,12 +14,12 @@ def layout(request):
 
 # Заказ цветов
 def flowers(request):
-    settings = {'pri_active': 'active'}
-    return render(request, 'flowers.html', context=settings)
+    initial: dict = {'pri_active': 'active'}
+    posies: list = Flower.objects.all() # noqa PyUnresolvedReferences
 
-# def flower_list(request):
-#     flowers = Flower.objects.all()
-#     return render(request, 'flower_list.html', {'flowers': flowers})
+    settings: dict = {**initial, 'posies': posies}
+
+    return render(request, 'flowers.html', context=settings)
 
 
 # Контакты

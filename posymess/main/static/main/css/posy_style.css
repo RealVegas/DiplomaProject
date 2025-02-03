@@ -182,7 +182,6 @@ p{
     font-weight: 400;
     color: #505050;
     text-align: center;
-    width: 750px;
     padding: 5px;
     margin: 20px auto;
     border-radius: 10px;
@@ -190,7 +189,7 @@ p{
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
 }
 
-.card p{
+.order{
     font-size: 18px;
     margin-top: 10px;
     text-align: left;

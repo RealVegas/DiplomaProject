@@ -8,6 +8,7 @@
         <a class="btn btn-outline-light" href="{% url 'register' %}" role="button">Регистрация</a>
         {% if user.is_authenticated %}
             <a class="btn btn-outline-light" href="{% url 'logout' %}" role="button">Выход</a>
+            <a class="btn btn-outline-light" href="{% url 'orders' %}" role="button">Заказы</a>
         {% else %}
             <a class="btn btn-outline-light" href="{% url 'login' %}" role="button">Вход</a>
         {% endif %}

@@ -19,27 +19,33 @@ def flowers(request):
     posies: list = Flower.objects.all() # noqa PyUnresolvedReferences
 
     settings: dict = {**initial, 'posies': posies}
-
     return render(request, 'flowers.html', context=settings)
 
 
 # Кнопка заказать
 @login_required
-def new_order(request, posy_name):
-    flower = get_object_or_404(Flower, posy_name=posy_name)
-    user = request.user
+def make_order(request, posy_name):
+    posy = get_object_or_404(Flower, posy_name=posy_name)
+    active = request.user
 
-    order = Order.objects.create(user=request.user, flower=flower) # noqa PyUnresolvedReferences
+    order = Order.objects.create(user=active, flower=posy) # noqa PyUnresolvedReferences
+    return redirect('orders')
+
+
+# Удаление заказа
+def delete_order(request, order_id):
+    if request.method == 'POST':
+        order = get_object_or_404(Order, id=order_id)
+        order.delete()
     return redirect('orders')
 
 
 # Список заказов
 @login_required
-def orders_list(request):
+def view_orders(request):
     user_orders = Order.objects.filter(user=request.user)  # noqa PyUnresolvedReferences
-    #user_orders = Order.objects.filter(user=request.user).select_related('flower') # noqa PyUnresolvedReferences
-
     return render(request, 'orders.html', {'orders': user_orders})
+
 
 # Контакты
 def bond(request):

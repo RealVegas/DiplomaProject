@@ -10,6 +10,25 @@ from .forms import add_user, check_auth
 
 # Главная страница
 def layout(request):
+    # Данные букетов
+    flowers_data = [
+        {'posy_name': 'Ландыши', 'price': 2000, 'posy_path': 'main/img/posies/small_01.png'},
+        {'posy_name': 'Красные и белые розы', 'price': 3500, 'posy_path': 'main/img/posies/small_02.png'},
+        {'posy_name': 'Фиолетовый букет из роз и хризантем', 'price': 4000, 'posy_path': 'main/img/posies/small_03.png'},
+        {'posy_name': 'Желтые розы', 'price': 1700.00, 'posy_path': 'main/img/posies/small_04.png'},
+        {'posy_name': 'Розовые розы, нарциссы и сирень', 'price': 2500.00, 'posy_path': 'main/img/posies/small_05.png'},
+        {'posy_name': 'Желтые тюльпаны', 'price': 3000.00, 'posy_path': 'main/img/posies/small_06.png'},
+        {'posy_name': 'Герберы и розы', 'price': 2700.00, 'posy_path': 'main/img/posies/small_07.png'},
+        {'posy_name': 'Желтые розы и хризантемы Бакарди', 'price': 3400.00, 'posy_path': 'main/img/posies/small_08.png'},
+    ]
+
+    # Добавление данных в таблицу
+    for num, flower in enumerate(flowers_data):
+        Flower.objects.get_or_create( # noqa PyUnresolvedReferences
+                posy_name=flower["posy_name"],
+                defaults={"price": flower["price"], "posy_path": flower["posy_path"]}
+        )
+
     return render(request, 'layout.html')
 
 
@@ -26,9 +45,10 @@ def flowers(request):
 @login_required
 def make_order(request, posy_name):
     posy = get_object_or_404(Flower, posy_name=posy_name)
+    price = posy.price
     active = request.user
 
-    order = Order.objects.create(user=active, flower=posy) # noqa PyUnresolvedReferences
+    order = Order.objects.create(user=active, flower=posy, order_price = price) # noqa PyUnresolvedReferences
     return redirect('orders')
 
 
@@ -44,7 +64,7 @@ def delete_order(request, order_id):
 # Список заказов
 @login_required
 def view_orders(request):
-    user_orders = Order.objects.filter(user=request.user)  # noqa PyUnresolvedReferences
+    user_orders = Order.objects.filter(user=request.user)
     return render(request, 'orders.html', {'orders': user_orders})
 
 
@@ -115,6 +135,7 @@ def user_login(request) -> Union[render, redirect]:
 
 
 # Выход
+@login_required
 def user_logout(request) -> redirect:
     logout(request)
     return redirect('login')

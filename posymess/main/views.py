@@ -65,7 +65,8 @@ def delete_order(request, order_id):
 @login_required
 def view_orders(request):
     user_orders = Order.objects.filter(user=request.user)
-    return render(request, 'orders.html', {'orders': user_orders})
+    amount_price = sum(order.order_price for order in user_orders)
+    return render(request, 'orders.html', {'orders': user_orders, 'amount': amount_price})
 
 
 # Контакты

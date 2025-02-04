@@ -10,7 +10,7 @@
         </div>
         {% for order in orders %}
         <div class="d-flex align-items-center justify-content-between mb-2">
-            <p class="mb-0 order">Заказ №{{ order.id }}: "{{ order.flower.posy_name }}" | Дата заказа: {{ order.order_date }} | Цена: {{ order.order_price }}</p>
+            <p class="mb-0 order">Заказ №{{order.id}}: "{{order.flower.posy_name}}" | Дата заказа: {{order.order_date}} | Цена: {{order.order_price}}</p>
             <div class="ms-auto">
                 <form action="{% url 'delete_order' order.id %}" method="POST" class="d-flex align-items-center">
                     {% csrf_token %}
@@ -21,6 +21,8 @@
         {% empty %}
             <p>Заказов нет</p>
         {% endfor %}
+        <hr>
+            <p class="mb-0 order">Суммарная стоимость заказов: {{amount}}</p>
         <div class="d-flex justify-content-center mt-3 gap-3">
             <a href="{% url 'flowers' %}" class="btn btn-primary w-100 ">Вернуться к выбору букетов</a>
             <a href="{% url 'bond' %}" class="btn btn-primary w-100">Купить</a>
@@ -28,28 +30,3 @@
     </div>
 </div>
 {% endblock %}
-
-<div class="card">
-    <div class="card-body">
-        <div class="card-header text-center bg-primary text-white">
-            <h4 class="mb-0">Ваши заказы</h4>
-        </div>
-        {% for order in orders %}
-            <p>Заказ №{{ order.id }}: "{{ order.flower.posy_name }}" — {{ order.order_date }}</p>
-        {% empty %}
-            <p>Заказов нет</p>
-        {% endfor %}
-        <div class="d-flex justify-content-center mt-3 gap-3">
-            <a href="{% url 'flowers' %}" class="btn btn-primary w-100 ">Вернутся к выбору букетов</a>
-            <a href="{% url 'bond' %}" class="btn btn-primary w-100">Купить</a>
-        </div>
-    </div>
-</div>
-
-            <div class="d-flex align-items-center justify-\content-between mb-2">
-                <p class="mb-0">Заказ №{{ order.id }}: "{{ order.flower.posy_name }}" — {{ order.order_date }}</p>
-                <form action="{% url 'delete_order' order.id %}" method="POST" class="d-flex align-items-center">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-primary btn-sm me-2">-</button>
-                </form>
-            </div>

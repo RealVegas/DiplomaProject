@@ -10,8 +10,8 @@
                 <div class="card main">
                     <img src="{% static item.posy_path %}" class="card-img-top" alt="{{ item.posy_name }}">
                     <div class="card-body">
-                        <h5 class="card-title">{{ item.posy_name }}</h5>
-                        <p class="card-text">{{ item.price}} ₽</p>
+                        <h5 class="card-title">{{item.posy_name}}</h5>
+                        <p class="card-text">{{item.price}} ₽</p>
                         <a href="{% url 'make_order' item.posy_name %}" class="btn btn-primary">Заказать</a>
                     </div>
                 </div>

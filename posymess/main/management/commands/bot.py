@@ -12,6 +12,7 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from main.models import User, Flower, Order # noqa PyUnresolvedReferences
 
+
 # Здесь нужно обязательно определить настройки Django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'posymess.settings')
 

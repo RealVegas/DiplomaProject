@@ -1,5 +1,8 @@
 import os
 
 if __name__ == '__main__':
-    os.system('python posymess/manage.py test')
-    os.system('python posymess/manage.py runserver')
+    if os.path.exists('posymess'):
+        os.chdir('posymess')
+
+    #os.system('python manage.py test')
+    os.system('python manage.py runserver')

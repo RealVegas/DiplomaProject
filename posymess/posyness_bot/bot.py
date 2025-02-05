@@ -1,15 +1,22 @@
 import os
 import sys
-import asyncio
-
 from pathlib import Path
+from django.core.wsgi import get_wsgi_application
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'posymess.posymess.settings')
 sys.path.append(BASE_DIR.as_posix())
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'posymess.posymess.settings')
 
 from posymess.posymess.settings import BOT_TOKEN
+from posymess.main.models import User, Flower, Order
+
+
+
+
+
+import asyncio
+
 from aiogram import Bot, Dispatcher
 # from aiogram import Bot, Dispatcher, F, types
 # from aiogram.filters import Command
@@ -22,7 +29,9 @@ from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 # Импорт Django ORM
 # from django.core.wsgi import get_wsgi_application
-# from posymess.main.models import User, Flower, Order
+
+
+
 
 # Логирование
 import logging

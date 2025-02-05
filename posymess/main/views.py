@@ -48,6 +48,10 @@ def make_order(request, posy_name):
     price = posy.price
     active = request.user
 
+    print(type(posy), posy)
+    print(type(posy), price)
+    print(type(active), active)
+
     order = Order.objects.create(user=active, flower=posy, order_price = price) # noqa PyUnresolvedReferences
     return redirect('orders')
 

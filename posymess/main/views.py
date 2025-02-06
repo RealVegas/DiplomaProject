@@ -48,10 +48,6 @@ def make_order(request, posy_name):
     price = posy.price
     active = request.user
 
-    print(type(posy), posy)
-    print(type(posy), price)
-    print(type(active), active)
-
     order = Order.objects.create(user=active, flower=posy, order_price = price) # noqa PyUnresolvedReferences
     return redirect('orders')
 
@@ -144,11 +140,3 @@ def user_login(request) -> Union[render, redirect]:
 def user_logout(request) -> redirect:
     logout(request)
     return redirect('login')
-
-
-# Получение активного пользователя для бота
-def get_user(request):
-    if request.user.is_anonymous:
-        return None
-    else:
-        return request.user

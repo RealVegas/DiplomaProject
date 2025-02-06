@@ -13,6 +13,8 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.client.default import DefaultBotProperties
+from aiogram.utils.keyboard import InlineKeyboardBuilder
+
 from django.core.management import BaseCommand
 from django.core.wsgi import get_wsgi_application
 
@@ -126,15 +128,15 @@ async def show_orders(message: types.Message):
         for order in simple_orders:
             # Кнопка для отмены заказа
             delete_keyboard = InlineKeyboardMarkup(inline_keyboard=[[
-                              InlineKeyboardButton(text=f'❌ Отменить заказ', callback_data=f'delete:{order['id']}')]],
-                              resize_keyboard=True)
+                InlineKeyboardButton(text=f'❌ Отменить заказ', callback_data=f'delete:{order['id']}')]],
+                    resize_keyboard=True)
 
             # Информация о заказе
             await message.answer(text=f'Заказ №{order['id']} '
                                       f'букет «{order['posy_name']}» '
                                       f'дата заказа: {order['order_date']} '
                                       f'цена {order['order_price']}, ',
-                                      reply_markup=delete_keyboard)
+                                 reply_markup=delete_keyboard)
     else:
         await message.answer('Заказов нет')
 
@@ -145,60 +147,74 @@ async def remove_order(callback: types.CallbackQuery):
     dead_id = callback.data.split(':')[1]
     order = await sync_to_async(Order.objects.get)(id=dead_id)
     await sync_to_async(order.delete)()
-    # order.save()
     await callback.message.edit_text(text=f'Заказ №{dead_id} отменён')
     await callback.answer(text='')
 
 
+# Создание списка букетов в виде списка словарей
+def posy_list(flowers) -> list[dict[str, str | float]]:
+    new_posies = []
+
+    for one_item in flowers:
+        # temp_dict = {}
+        temp_dict = {'id': one_item.id,
+                     'posy_name': one_item.posy_name,
+                     'price': float(one_item.price),
+                     'posy_path': one_item.posy_path,
+                     'telegram_id': one_item.telegram_id}
+
+        new_posies.append(temp_dict)
+
+    print(len(new_posies))
+
+    return new_posies
+
+
 # Кнопка заказать букет
-# @dp.message(F.text == '💐 Заказать букет')
-# async def new_order(message: types.Message):
-#     active_user = current_user(message)
-#
-#     if not active_user:
-#         return
-#
-#     # Получаем список букетов
-#     posies = Flower.objects.all() # noqa PyUnresolvedReferences
-#
-#     if posies.exists():
-#
-#         for posy in posies:
-#
-#             order_keyboard = InlineKeyboardMarkup(inline_keyboard=[[
-#                              InlineKeyboardButton(text=posy.posy_name, callback_data=f'pick_one:{posy.id}')]],
-#                              resize_keyboard=True)
-#
-#         await message.answer('Выберите букет из списка:', reply_markup=order_keyboard)
-#
-#
-# @dp.callback_query(Text(startswith="select_bouquet:"))
-# async def select_bouquet(callback: types.CallbackQuery, state: FSMContext):
-#     bouquet_id = int(callback.data.split(":")[1])
-#     data = await state.get_data()
-#     email = data.get("email")
-#
-#     if email:
-#         user = User.objects.get(email=email)
-#         bouquet = Bouquet.objects.get(id=bouquet_id)
-#
-#         # Создание нового заказа
-#         Order.objects.create(user=user, bouquet=bouquet, status="active")
-#         await callback.message.edit_text(f"Заказ на {bouquet.name} создан 🌸")
-#         await callback.answer("Заказ добавлен.")
-#     else:
-#         await callback.message.edit_text("Сначала подтвердите email.")
-#         await callback.answer("Email не найден.")
+@dp.message(F.text == '💐 Заказать букет')
+async def new_order(message: types.Message):
+    current_user = active_users[message.from_user.id]
+
+    if not current_user:
+        return
+
+    # Получаем список букетов
+    posies = await sync_to_async(Flower.objects.all)()
+
+    if await sync_to_async(posies.exists)():
+
+        simple_flowers = await sync_to_async(posy_list)(posies)
+
+        order_keyboard = InlineKeyboardBuilder()
+
+        # Кнопка для выбора букета
+        for posy in simple_flowers:
+            order_keyboard.add(InlineKeyboardButton(text=f'«{posy["posy_name"]}» - {posy["price"]} ₽', callback_data=f'pick_one:{posy["id"]}'))
+
+        order_keyboard = order_keyboard.adjust(1).as_markup()
+
+        await message.answer(text='Выберите букет из списка:', reply_markup=order_keyboard)
+
+
+# Создание заказа
+@dp.callback_query(F.data.startswith('pick_one:'))
+async def order_posy(callback: types.CallbackQuery):
+    posy_id = callback.data.split(':')[1]
+
+
+    # Создание нового заказа
+        Order.objects.create(user=user, bouquet=bouquet,)
+        await callback.message.edit_text(f"Заказ на {bouquet.name} создан 🌸")
+        await callback.answer("Заказ добавлен.")
+    else:
+        await callback.message.edit_text("Сначала подтвердите email.")
+        await callback.answer("Email не найден.")
 
 
 # posy = get_object_or_404(Flower, posy_name=posy_name)
 # price = posy.price
 # active = request.user
 #
-# print(type(posy), posy)
-# print(type(posy), price)
-# print(type(active), active)
-
 # order = Order.objects.create(user=active, flower=posy, order_price = price) # noqa PyUnresolvedReferences
 # return redirect('orders')
 

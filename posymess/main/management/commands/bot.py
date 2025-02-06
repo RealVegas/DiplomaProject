@@ -140,14 +140,14 @@ async def show_orders(message: types.Message):
 
 
 # Отмена заказа
-# @dp.callback_query(F.data.startswith('delete:'))
-# async def remove_order(callback: types.CallbackQuery):
-#     dead_id = callback.data.split(':')[1]
-#     order = await sync_to_async(Order.objects.get)(order_id=dead_id)
-#     await sync_to_async(order.delete)()
-#     # order.save()
-#     await callback.message.edit_text(text=f'Заказ №{dead_id} отменён')
-#     await callback.answer(text='')
+@dp.callback_query(F.data.startswith('delete:'))
+async def remove_order(callback: types.CallbackQuery):
+    dead_id = callback.data.split(':')[1]
+    order = await sync_to_async(Order.objects.get)(id=dead_id)
+    await sync_to_async(order.delete)()
+    # order.save()
+    await callback.message.edit_text(text=f'Заказ №{dead_id} отменён')
+    await callback.answer(text='')
 
 
 # Кнопка заказать букет

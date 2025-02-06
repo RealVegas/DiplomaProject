@@ -42,7 +42,7 @@ async def echo(message: types.Message):
 
 class Command(BaseCommand):
     @classmethod
-    async def start_bot(cls):
+    async def start_bot(cls) -> None:
         logger.info('Бот запущен')
         await bot.delete_webhook(drop_pending_updates=True)
         await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types())
@@ -52,7 +52,7 @@ class Command(BaseCommand):
         await bot.session.close()
         logger.info('Бот остановлен')
 
-    def handle(self, *args, **kwargs):
+    def handle(self, *args, **kwargs) -> None:
         try:
             asyncio.run(self.start_bot())
         except KeyboardInterrupt:

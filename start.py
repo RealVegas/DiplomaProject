@@ -5,5 +5,5 @@ if __name__ == '__main__':
         os.chdir('posymess')
 
     #os.system('python manage.py test')
-    os.system('python manage.py bot')
-    #os.system('python manage.py runserver')
+    #os.system('python manage.py bot')
+    os.system('python manage.py runserver')

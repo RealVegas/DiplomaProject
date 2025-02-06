@@ -139,17 +139,17 @@ def add_user(reg_data: dict[str, str]) -> User | str:
 # Проверка авторизации
 def check_auth(log_data) -> int | User:
     pass_list = [False, False]
-    email = None
+    current_user = None
 
     pass_list[0] = User.objects.filter(email=log_data['email']).exists() # noqa PyUnresolvedReferences
 
     if pass_list[0]:
-        email = User.objects.get(email=log_data['email']) # noqa PyUnresolvedReferences
-        pass_list[1] = check_password(log_data['password'], email.password)
+        current_user = User.objects.get(email=log_data['email']) # noqa PyUnresolvedReferences
+        pass_list[1] = check_password(log_data['password'], current_user.password)
 
     if not pass_list[0]:
         return 1
     elif not pass_list[1]:
         return 0
     else:
-        return email
+        return current_user

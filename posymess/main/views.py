@@ -32,7 +32,7 @@ def layout(request):
     return render(request, 'layout.html')
 
 
-# Заказ букетов
+# Страница - Заказ букетов
 def flowers(request):
     initial: dict = {'pri_active': 'active'}
     posies: list = Flower.objects.all() # noqa PyUnresolvedReferences
@@ -124,15 +124,15 @@ def user_login(request) -> Union[render, redirect]:
 
         login_data = login_form.pass_data()
 
-        mail = check_auth(login_data)
+        user = check_auth(login_data)
 
-        if isinstance(mail, User):
-            user_mail = authenticate(request, username=mail, password=login_data['password'])
-            login(request, user_mail)
+        if isinstance(user, User):
+            auth_user = authenticate(request, username=user, password=login_data['password'])
+            login(request, auth_user)
             return redirect('flowers')
 
         else:
-            errors.append(exit_message[mail])
+            errors.append(exit_message[user])
             return render(request, 'login.html', {'errors': errors})
 
     # Если метод не POST — отображаем страницу регистрации (пустая форма)
@@ -144,3 +144,11 @@ def user_login(request) -> Union[render, redirect]:
 def user_logout(request) -> redirect:
     logout(request)
     return redirect('login')
+
+
+# Получение активного пользователя для бота
+def get_user(request):
+    if request.user.is_anonymous:
+        return None
+    else:
+        return request.user

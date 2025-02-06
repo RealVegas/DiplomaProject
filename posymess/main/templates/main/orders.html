@@ -10,7 +10,7 @@
         </div>
         {% for order in orders %}
         <div class="d-flex align-items-center justify-content-between mb-2">
-            <p class="mb-0 order">Заказ №{{order.id}}: "{{order.flower.posy_name}}" | Дата заказа: {{order.order_date}} | Цена: {{order.order_price}}</p>
+            <p class="mb-0 order">Заказ №{{order.id}}: «{{order.flower.posy_name}}» | Дата заказа: {{order.order_date}} | Цена: {{order.order_price}}</p>
             <div class="ms-auto">
                 <form action="{% url 'delete_order' order.id %}" method="POST" class="d-flex align-items-center">
                     {% csrf_token %}

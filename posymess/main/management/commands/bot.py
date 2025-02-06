@@ -3,8 +3,10 @@ import asyncio
 from loguru import logger
 
 from aiogram import Bot, Dispatcher, F, types
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.enums import ParseMode
 from aiogram.filters import Command
+
 # from aiogram.fsm.context import FSMContext
 # from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.storage.memory import MemoryStorage
@@ -12,12 +14,12 @@ from aiogram.client.default import DefaultBotProperties
 from django.core.management import BaseCommand
 from django.core.wsgi import get_wsgi_application
 
+from main.views import get_user  # noqa PyUnresolvedReferences
+from main.models import User, Flower, Order  # noqa PyUnresolvedReferences
+from posymess.settings import BOT_TOKEN  # noqa PyUnresolvedReferences
 
 from .support import clear_commands
 from .keyboards import start_keyboard
-from main.views import get_user # noqa PyUnresolvedReferences
-from main.models import User, Flower, Order  # noqa PyUnresolvedReferences
-from posymess.settings import BOT_TOKEN  # noqa PyUnresolvedReferences
 
 # Настройки Django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "posymess.settings")
@@ -42,7 +44,7 @@ async def start_command(message: types.Message):
 # Кнопка помощь
 @dp.message(F.text == '🤓 Помощь')
 async def help_handler(message: types.Message):
-    await message.answer('Я помогу вам с моими функциями\n'
+    await message.answer(text='Я помогу вам с моими функциями\n'
                          '\nВы можете:\n'
                          '1. Создать новый заказ (кнопка «💐 Заказать букет»)\n'
                          '2. Посмотреть свои текущие заказы (кнопка «📦 Мои заказы»)\n'
@@ -50,7 +52,7 @@ async def help_handler(message: types.Message):
 
 
 # Кнопка мои заказы
-@dp.message(F.text == "📦 Мои заказы")
+@dp.message(F.text == '📦 Мои заказы')
 async def show_orders(message: types.Message):
     current_user = get_user()
 
@@ -58,26 +60,66 @@ async def show_orders(message: types.Message):
         error_message = 'Вы не авторизованы, войдите в аккаунт на сайте'
         return await message.answer(error_message)
 
-    # Получаем пользователя и его заказы
+    # Получаем заказы пользователя
     orders = Order.objects.filter(user=current_user)
 
     if orders.exists():
+
         for order in orders:
-            markup = InlineKeyboardMarkup()
-            markup.add(InlineKeyboardButton(f"❌ Отменить заказ {order.id}", callback_data=f"cancel_order:{order.id}"))
-            await message.answer(f"Заказ #{order.id}: {order.bouquet.name} 🌹\n"
-                                 f"Статус: {order.status}", reply_markup=markup)
+            # Кнопка для отмены заказа
+            delete_keyboard = InlineKeyboardMarkup(inline_keyboard=[[
+                              InlineKeyboardButton(text=f'❌ Отменить заказ', callback_data=f'delete:{order.id}')]],
+                              resize_keyboard=True)
+
+            # Информация о заказе
+            await message.answer(text=f'Заказ №{order.id}: «{order.flower.posy_name}»\n'
+                                 f'Дата заказа: {order.order_date}\n'
+
+                                 f'Цена: {order.order_price}', reply_markup=delete_keyboard)
     else:
-        await message.answer("У вас нет активных заказов.")анный email не найден. Попробуйте еще раз.")
+        await message.answer('Заказов нет')
 
 
+# Отмена заказа
+@dp.callback_query(F.data.startswith('delete:'))
+async def delete_order(callback: types.CallbackQuery):
+    dead_id = callback.data.split(':')[1]
+    order = Order.objects.get(order_id=dead_id)
+    order.delete()
+    # order.save()
+    await callback.message.edit_text(text=f'Заказ №{dead_id} отменён')
+    await callback.answer(text='')
 
 
+# Кнопка заказать букет
+@dp.message(F.text == '💐 Заказать букет')
+async def add_order(message: types.Message, state: FSMContext):
+    bouquets = Bouquet.objects.all()
+    markup = InlineKeyboardMarkup()
+
+    for bouquet in bouquets:
+        markup.add(InlineKeyboardButton(bouquet.name, callback_data=f"select_bouquet:{bouquet.id}"))
+
+    await message.answer("Выберите букет из списка:", reply_markup=markup)
 
 
+@dp.callback_query(Text(startswith="select_bouquet:"))
+async def select_bouquet(callback: types.CallbackQuery, state: FSMContext):
+    bouquet_id = int(callback.data.split(":")[1])
+    data = await state.get_data()
+    email = data.get("email")
 
+    if email:
+        user = User.objects.get(email=email)
+        bouquet = Bouquet.objects.get(id=bouquet_id)
 
-
+        # Создание нового заказа
+        Order.objects.create(user=user, bouquet=bouquet, status="active")
+        await callback.message.edit_text(f"Заказ на {bouquet.name} создан 🌸")
+        await callback.answer("Заказ добавлен.")
+    else:
+        await callback.message.edit_text("Сначала подтвердите email.")
+        await callback.answer("Email не найден.")
 
 
 

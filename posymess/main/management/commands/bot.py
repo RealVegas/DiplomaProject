@@ -1,59 +1,95 @@
 import os
-from loguru import logger
-from django.core.management.base import BaseCommand
 import asyncio
-from aiogram import Bot, Dispatcher, types
+from loguru import logger
+
+from aiogram import Bot, Dispatcher, F, types
+from aiogram.enums import ParseMode
+from aiogram.filters import Command
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.storage.memory import MemoryStorage
-from aiogram.filters import Command
 from aiogram.client.default import DefaultBotProperties
-from aiogram.enums import ParseMode
-from main.models import User, Flower, Order # noqa PyUnresolvedReferences
+from django.core.management import BaseCommand
+from django.core.wsgi import get_wsgi_application
 
-# Здесь нужно обязательно определить настройки Django
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'posymess.settings')
+from main.models import User, Flower, Order  # noqa PyUnresolvedReferences
+from posymess.settings import BOT_TOKEN  # noqa PyUnresolvedReferences
 
-# noinspection PyUnresolvedReferences
-from posymess.settings import BOT_TOKEN
+# Настройки Django
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "posymess.settings")
+application = get_wsgi_application()
 
 # Инициализация логирования
 logger.add('debug.log', format='{time} {level} {message}', level='DEBUG', rotation='100 MB', compression='zip')
 
-# Создаем экземпляр бота
+
+# Состояния для FSM
+class States(StatesGroup):
+    enter_email = State()
+    select_flower = State()
+
+
+# Экземпляр бота
+mem_storage = MemoryStorage()
 bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
-
-# Создаем экземпляр диспетчера и передаем ему бота
-dp = Dispatcher(bot=bot, storage=MemoryStorage())
+dp = Dispatcher(bot=bot, storage=mem_storage)
 
 
-# Хэндлер команды /start
-@dp.message(Command('start'))
-async def send_welcome(message: types.Message):
-    await message.reply("Привет! Я ваш бот, работающий вместе с Django!")
 
 
-# Хэндлер для всех остальных текстовых сообщений
-@dp.message()
-async def echo(message: types.Message):
-    await message.answer(message.text)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class Command(BaseCommand):
+    """
+    Класс создает команду для запуска бота
+
+    """
     @classmethod
-    async def start_bot(cls) -> None:
-        logger.info('Бот запущен')
+    async def run_bot(cls) -> None:
         await bot.delete_webhook(drop_pending_updates=True)
         await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types())
 
     @classmethod
-    async def stop_bot(cls) -> None:
+    async def escape_bot(cls) -> None:
         await bot.session.close()
-        logger.info('Бот остановлен')
 
     def handle(self, *args, **kwargs) -> None:
         try:
-            asyncio.run(self.start_bot())
+            logger.info('Бот запущен')
+            asyncio.run(self.run_bot())
+
         except KeyboardInterrupt:
-            asyncio.run(self.stop_bot())
+            logger.info('Бот остановлен')
+
+        finally:
+            asyncio.run(self.escape_bot())

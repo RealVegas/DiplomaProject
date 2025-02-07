@@ -4,7 +4,7 @@ import asyncio
 from loguru import logger
 from decimal import Decimal
 
-from datetime import datetime
+
 from asgiref.sync import sync_to_async
 from aiogram import Bot, Dispatcher, F, types
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
@@ -22,7 +22,7 @@ from django.core.wsgi import get_wsgi_application
 from main.models import User, Flower, Order  # noqa PyUnresolvedReferences
 from posymess.settings import BOT_TOKEN  # noqa PyUnresolvedReferences
 
-from .support import clear_commands
+from .support import clear_commands, orders_list, posy_list
 from .keyboards import start_keyboard, main_keyboard
 
 # Настройки Django
@@ -81,23 +81,8 @@ async def help_handler(message: types.Message):
                               '\nВы можете:\n'
                               '1. Аутентификация в боте (кнопка «🚀 Запуск»)\n'
                               '1. Создать новый заказ (кнопка «💐 Заказать букет»)\n'
-                              '2. Посмотреть свои текущие заказы (кнопка «📦 Мои заказы»)\n'
+                              '2. Посмотреть текущие заказы (кнопка «📦 Мои заказы»)\n'
                               '3. Отменить текущие заказы (кнопка «📦 Мои заказы»)')
-
-
-# Создание списка заказов в виде списка словарей
-def orders_list(orders) -> list[dict[str, str | float]]:
-    new_orders = []
-
-    for one_item in orders:
-        temp_dict = {'id': one_item.id,
-                     'posy_name': one_item.flower.posy_name,
-                     'order_date': datetime.strftime(one_item.order_date, format='%d.%m.%Y'),
-                     'order_price': float(one_item.order_price)}
-
-        new_orders.append(temp_dict)
-
-    return new_orders
 
 
 # Кнопка мои заказы
@@ -139,24 +124,6 @@ async def remove_order(callback: types.CallbackQuery):
     await sync_to_async(order.delete)()
     await callback.message.edit_text(text=f'Заказ №{dead_id} отменён')
     await callback.answer(text='')
-
-
-# Создание списка букетов в виде списка словарей
-def posy_list(flowers) -> list[dict[str, str | float]]:
-    new_posies: list = []
-
-    for one_item in flowers:
-        temp_dict: dict[str, str | float] = {
-            'id': one_item.id,
-            'posy_name': one_item.posy_name,
-            'price': float(one_item.price),
-            'posy_path': one_item.posy_path,
-            'telegram_id': one_item.telegram_id
-        }
-
-        new_posies.append(temp_dict)
-
-    return new_posies
 
 
 # Кнопка заказать букет

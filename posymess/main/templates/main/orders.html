@@ -14,7 +14,7 @@
             <div class="ms-auto">
                 <form action="{% url 'delete_order' order.id %}" method="POST" class="d-flex align-items-center">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-primary btn-sm me-2">-</button>
+                    <button type="submit" class="btn btn-success btn-sm me-2">-</button>
                 </form>
             </div>
         </div>
@@ -24,8 +24,8 @@
         <hr>
             <p class="mb-0 order">Суммарная стоимость заказов: {{amount}}</p>
         <div class="d-flex justify-content-center mt-3 gap-3">
-            <a href="{% url 'flowers' %}" class="btn btn-primary w-100 ">Вернуться к выбору букетов</a>
-            <a href="{% url 'bond' %}" class="btn btn-primary w-100">Купить</a>
+            <a href="{% url 'flowers' %}" class="btn btn-success w-100 ">Вернуться к выбору букетов</a>
+            <a href="{% url 'bond' %}" class="btn btn-success w-100">Купить</a>
         </div>
     </div>
 </div>

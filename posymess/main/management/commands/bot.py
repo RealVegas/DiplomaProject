@@ -2,13 +2,14 @@ import os
 import asyncio
 
 from loguru import logger
+from decimal import Decimal
 
 from datetime import datetime
 from asgiref.sync import sync_to_async
 from aiogram import Bot, Dispatcher, F, types
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.enums import ParseMode
-from aiogram.filters import Command
+from aiogram.filters import CommandStart, or_f
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.storage.memory import MemoryStorage
@@ -47,13 +48,12 @@ dp = Dispatcher(bot=bot, storage=mem_storage)
 
 
 # Приветствие и вызов главного меню
-@dp.message(Command('start'))
+@dp.message(or_f(CommandStart(), F.text.func(lambda text: text == '🚀 Запуск')))
 async def start_command(message: types.Message, state: FSMContext):
     await clear_commands(bot)
     await message.answer(text='Добро пожаловать в Posy message! Я бот для заказа букетов')
+    await message.reply(text='Для продолжения работы с ботом введите адрес вашей электронной почты', reply_markup=start_keyboard)
     await state.set_state(States.enter_email)
-    await message.reply(text='Для продолжения работы с ботом введите адрес вашей электронной почты',
-                        reply_markup=start_keyboard)
 
 
 @dp.message(States.enter_email)
@@ -71,16 +71,7 @@ async def enter_email(message: types.Message, state: FSMContext):
     except User.DoesNotExist:
         await message.answer('Такая почта еще не зарегистрирована\n'
                              'Пожалуйста, зарегистрируйтесь на сайте, чтобы начать работу с ботом')
-
-
-# Кнопка запуск
-@dp.message(F.text == '🚀 Запуск')
-async def start_handler(message: types.Message, state: FSMContext):
-    await clear_commands(bot)
-    await message.answer(text='Добро пожаловать в Posy message! Я бот для заказа букетов')
-    await state.set_state(States.enter_email)
-    await message.reply(text='Для продолжения работы с ботом введите адрес вашей электронной почты',
-                        reply_markup=start_keyboard)
+        await message.reply(text='Для продолжения работы с ботом введите адрес вашей электронной почты', reply_markup=start_keyboard)
 
 
 # Кнопка помощи
@@ -88,7 +79,7 @@ async def start_handler(message: types.Message, state: FSMContext):
 async def help_handler(message: types.Message):
     await message.answer(text='Я помогу вам с моими функциями\n'
                               '\nВы можете:\n'
-                              '1. Регистрация в боте (кнопка «🚀 Запуск»)\n'
+                              '1. Аутентификация в боте (кнопка «🚀 Запуск»)\n'
                               '1. Создать новый заказ (кнопка «💐 Заказать букет»)\n'
                               '2. Посмотреть свои текущие заказы (кнопка «📦 Мои заказы»)\n'
                               '3. Отменить текущие заказы (кнопка «📦 Мои заказы»)')
@@ -99,7 +90,6 @@ def orders_list(orders) -> list[dict[str, str | float]]:
     new_orders = []
 
     for one_item in orders:
-        temp_dict = {}
         temp_dict = {'id': one_item.id,
                      'posy_name': one_item.flower.posy_name,
                      'order_date': datetime.strftime(one_item.order_date, format='%d.%m.%Y'),
@@ -153,19 +143,18 @@ async def remove_order(callback: types.CallbackQuery):
 
 # Создание списка букетов в виде списка словарей
 def posy_list(flowers) -> list[dict[str, str | float]]:
-    new_posies = []
+    new_posies: list = []
 
     for one_item in flowers:
-        # temp_dict = {}
-        temp_dict = {'id': one_item.id,
-                     'posy_name': one_item.posy_name,
-                     'price': float(one_item.price),
-                     'posy_path': one_item.posy_path,
-                     'telegram_id': one_item.telegram_id}
+        temp_dict: dict[str, str | float] = {
+            'id': one_item.id,
+            'posy_name': one_item.posy_name,
+            'price': float(one_item.price),
+            'posy_path': one_item.posy_path,
+            'telegram_id': one_item.telegram_id
+        }
 
         new_posies.append(temp_dict)
-
-    print(len(new_posies))
 
     return new_posies
 
@@ -189,7 +178,8 @@ async def new_order(message: types.Message):
 
         # Кнопка для выбора букета
         for posy in simple_flowers:
-            order_keyboard.add(InlineKeyboardButton(text=f'«{posy["posy_name"]}» - {posy["price"]} ₽', callback_data=f'pick_one:{posy["id"]}'))
+            callback_string: str = f'pick_one:{posy["price"]}:{posy["id"]}:{message.from_user.id}'
+            order_keyboard.add(InlineKeyboardButton(text=f'«{posy["posy_name"]}» - {posy["price"]} ₽', callback_data=callback_string))
 
         order_keyboard = order_keyboard.adjust(1).as_markup()
 
@@ -199,24 +189,23 @@ async def new_order(message: types.Message):
 # Создание заказа
 @dp.callback_query(F.data.startswith('pick_one:'))
 async def order_posy(callback: types.CallbackQuery):
-    posy_id = callback.data.split(':')[1]
+    data = callback.data.split(':')
 
+    # --------------------------------
+    # data[0] = 'pick_one:'
+    # Decimal(data[1]) = posy['price']
+    # int(data[2]) = posy['id']
+    # int(data[3]) = user_id
+    # --------------------------------
 
-    # Создание нового заказа
-        Order.objects.create(user=user, bouquet=bouquet,)
-        await callback.message.edit_text(f"Заказ на {bouquet.name} создан 🌸")
-        await callback.answer("Заказ добавлен.")
-    else:
-        await callback.message.edit_text("Сначала подтвердите email.")
-        await callback.answer("Email не найден.")
+    current_user = active_users[int(data[3])]
+    posy = await sync_to_async(Flower.objects.get)(id=int(data[2]))
+    price = Decimal(data[1])
 
+    order = await sync_to_async(Order.objects.create)(user=current_user, flower=posy, order_price=price)  # noqa PyUnresolvedReferences
 
-# posy = get_object_or_404(Flower, posy_name=posy_name)
-# price = posy.price
-# active = request.user
-#
-# order = Order.objects.create(user=active, flower=posy, order_price = price) # noqa PyUnresolvedReferences
-# return redirect('orders')
+    await callback.message.edit_text(f'Заказ на {posy.posy_name} создан')
+    await callback.answer()
 
 
 class Command(BaseCommand):

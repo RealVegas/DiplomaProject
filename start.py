@@ -21,6 +21,8 @@ if __name__ == '__main__':
     if os.path.exists('posymess'):
         os.chdir('posymess')
 
+    # run_test()
+
     start_bot = threading.Thread(target=run_bot)
     start_server = threading.Thread(target=run_server)
 

@@ -23,7 +23,7 @@ class Flower(models.Model):
     posy_name: str = models.CharField('Название букета', max_length=50, unique=True, null=False)
     price: float = models.DecimalField('Цена букета', max_digits=10, decimal_places=2)
     posy_path: str = models.CharField('Путь к фото букета', max_length=255, default='main/img/posies/small_01.png')
-    telegram_id: int = models.CharField('ID фото в Telegram', max_length=255, null=True, blank=True)
+    telegram_id: int = models.CharField('Идентификатор фото (Telegram)', max_length=255, null=True, blank=True)
 
     def __str__(self):
         return self.posy_name
@@ -38,6 +38,7 @@ class Order(models.Model):
     flower: str = models.ForeignKey(Flower, on_delete=models.CASCADE)
     order_price: float = models.DecimalField('Цена букета', max_digits=10, decimal_places=2)
     order_date: str = models.DateTimeField('Дата заказа', auto_now_add=True)
+    order_state: str = models.BooleanField('Статус заказа', max_length=50, null=True, blank=True)
 
     def __str__(self):
         return f'Заказ №{self.id} от {self.user.email} букет {self.flower.posy_name} цена {self.order_price}' # noqa UnresolvedReference

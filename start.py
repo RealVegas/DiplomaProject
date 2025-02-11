@@ -23,8 +23,8 @@ if __name__ == '__main__':
 
     # run_test()
 
-    start_bot = threading.Thread(target=run_bot)
+    # start_bot = threading.Thread(target=run_bot)
     start_server = threading.Thread(target=run_server)
 
-    start_bot.start()
+    # start_bot.start()
     start_server.start()

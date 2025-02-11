@@ -28,11 +28,14 @@ BOT_TOKEN = env('BOT_TOKEN')
 SECRET_KEY = 'django-insecure-0lg6mt3num7zurq!9x=be1-9u&#y44i3t7=nnzutdq60f+%ej6'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+# INFO: If project is not work set DEBUG = True, and ALLOWED_HOSTS = []
 DEBUG = False
+# DEBUG = True
 
 AUTH_USER_MODEL = 'main.User'
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+# ALLOWED_HOSTS = []
 
 # Application definition
 
